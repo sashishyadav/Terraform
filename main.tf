@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-1"
+  region = var.aws_region
 }
 
 # Create IAM Role and attach policies
@@ -43,11 +43,11 @@ resource "aws_sns_topic" "key_rotation_topic" {
 # Create Lambda Function
 resource "aws_lambda_function" "iam_scripts" {
   filename         = "function.zip"
-  function_name    = "Iam_scripts"
+  function_name    = var.lambda_function_name
   role             = aws_iam_role.invoke_lambda_role.arn
-  handler          = "lambda_function.lambda_handler"
-  source_code_hash = filebase64sha256("function.zip")
-  runtime          = "python3.8"
+  handler          = var.lambda_handler
+  source_code_hash = filebase64sha256(var.lambda_code_path)
+  runtime          = var.lambda_runtime
 
   environment {
     variables = {
@@ -59,15 +59,15 @@ resource "aws_lambda_function" "iam_scripts" {
 # Set Lambda Function Timeout and Memory Size
 resource "aws_lambda_function_configuration" "iam_scripts_config" {
   function_name = aws_lambda_function.iam_scripts.function_name
-  timeout       = 600 # 10 minutes
-  memory_size   = 128
+  timeout       = var.lambda_timeout
+  memory_size   = var.lambda_memory_size
 }
 
 # Create CloudWatch Event Rule
 resource "aws_cloudwatch_event_rule" "iam_scripts_schedule" {
   name        = "IamScriptsSchedule"
   description = "Triggers the Iam_scripts Lambda function on a schedule"
-  schedule_expression = "rate(7 days)"
+  schedule_expression = var.schedule_expression
 }
 
 # Create CloudWatch Event Target
@@ -89,8 +89,8 @@ resource "aws_lambda_permission" "allow_cloudwatch" {
 # Zip the Lambda function code
 data "archive_file" "lambda_zip" {
   type        = "zip"
-  source_dir  = "path/to/your/lambda_function_directory"
-  output_path = "path/to/your/function.zip"
+  source_dir  = var.lambda_source_dir
+  output_path = var.lambda_output_path
 }
 
 output "sns_topic_arn" {
