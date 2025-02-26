@@ -5,17 +5,17 @@ variable "region" {
 
 variable "lambda_function_name" {
   description = "The name of the Lambda function"
-  default     = "Iam_scripts"
+  default     = "Iam_scripts-1"
 }
 
 variable "sns_topic_name" {
   description = "The name of the SNS topic"
-  default     = "key-rotation-topic"
+  default     = "key-rotation-topic-1"
 }
 
 variable "lambda_timeout" {
   description = "The timeout for the Lambda function in seconds"
-  default     = 600
+  default     = 300
 }
 
 variable "lambda_memory_size" {
