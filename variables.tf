@@ -5,7 +5,7 @@ variable "aws_region" {
 
 variable "lambda_function_name" {
   description = "The name of the Lambda function"
-  default     = "Iam_scripts"
+  default     = "Iam_scripts-1"
 }
 
 variable "lambda_handler" {
@@ -25,7 +25,7 @@ variable "lambda_runtime" {
 
 variable "lambda_timeout" {
   description = "The timeout for the Lambda function"
-  default     = 600
+  default     = 300
 }
 
 variable "lambda_memory_size" {
